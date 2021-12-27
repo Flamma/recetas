@@ -66,3 +66,11 @@ class Recipe:
         self.steps = steps
         self.ingredients = ingredients
 
+    def __add__(self, recipe_to_add: 'Recipe') -> 'Recipe':
+        return Recipe(
+            name=self.name,
+            description=self.description,
+            steps=self.steps,
+            ingredients=self.ingredients + recipe_to_add.ingredients
+        )
+

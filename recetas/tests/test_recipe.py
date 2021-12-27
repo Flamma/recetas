@@ -93,3 +93,25 @@ def test_numeric_quantity_str_without_unit():
 
     assert quantity.text == '2.5'
 
+def test_add_recipes():
+    name_1 = Name('name1')
+    description_1 = Description('description1')
+    steps_1 = [Step('step11'), Step('step12'), Step('step13')]
+    ingredients_1 = [Ingredient('ing11'), Ingredient('ing12'), Ingredient('ing13')]
+
+    recipe_1 = Recipe(name_1, description_1, steps_1, ingredients_1)
+
+    name_2 = Name('name2')
+    description_2 = Description('description2')
+    steps_2 = [Step('step21'), Step('step22'), Step('step23')]
+    ingredients_2 = [Ingredient('ing21'), Ingredient('ing22'), Ingredient('ing23')]
+
+    recipe_2 = Recipe(name_2, description_2, steps_2, ingredients_2)
+
+    recipe = recipe_1 + recipe_2
+
+    assert recipe.name == recipe_1.name
+    assert recipe.description == recipe_1.description
+    assert recipe.steps == recipe_1.steps
+    assert recipe.ingredients == recipe_1.ingredients + recipe_2.ingredients
+    
