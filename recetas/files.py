@@ -73,3 +73,19 @@ def parse_quantity(text_arg: str) -> Quantity:
 
     return Quantity(text)
 
+def save_recipe(recipe: Recipe, filename: str):
+    first_line = name_line(recipe.name)
+    lines = [first_line] + [ingredient_line(ingredient) for ingredient in recipe.ingredients]
+
+    with open(filename, 'w+') as f:
+        for line in lines:
+            f.write(line+'\n')
+
+
+def name_line(name: Name) -> str:
+    return f"[{name.text}]"
+
+
+def ingredient_line(ingredient) -> str:
+    return f"{ingredient.text}" + ('' if not ingredient.quantity else f" #{ingredient.quantity.text}")
+
