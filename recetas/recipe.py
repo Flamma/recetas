@@ -71,6 +71,39 @@ class Recipe:
             name=self.name,
             description=self.description,
             steps=self.steps,
-            ingredients=self.ingredients + recipe_to_add.ingredients
+            ingredients=self.__merge(self.ingredients, recipe_to_add.ingredients)
         )
+
+    def __merge(self, ingredients1: list[Ingredient], ingredients2: list[Ingredient]):
+        def merge_numeric(ingredient_list):
+            current = {}
+
+            for ingredient in ingredient_list:
+                if isinstance(ingredient.quantity, NumericQuantity):
+                    current_number = current.get(ingredient.text, {}).get(ingredient.quantity.unit, 0)
+                    new_number = current_number + ingredient.quantity.number
+                    if not current.get(ingredient.text):
+                        current[ingredient.text] = {}
+                    current[ingredient.text][ingredient.quantity.unit] = new_number
+
+            return [Ingredient(text, NumericQuantity(number, unit)) for text, dictionary in current.items() for unit, number in dictionary.items() ]
+
+        all_ingredients = ingredients1 + ingredients2
+
+        numeric_ingredients = [
+            ingredient
+            for ingredient in all_ingredients
+            if isinstance(ingredient.quantity, NumericQuantity)
+        ]
+
+        other_ingredients = [
+            ingredient
+            for ingredient in all_ingredients
+            if not isinstance(ingredient.quantity, NumericQuantity)
+        ]
+
+        return merge_numeric(numeric_ingredients) + other_ingredients
+
+
+
 

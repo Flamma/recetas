@@ -93,18 +93,33 @@ def test_numeric_quantity_str_without_unit():
 
     assert quantity.text == '2.5'
 
-def test_add_recipes():
+
+def test_add_recipes_common_ingredients():
     name_1 = Name('name1')
     description_1 = Description('description1')
     steps_1 = [Step('step11'), Step('step12'), Step('step13')]
-    ingredients_1 = [Ingredient('ing11'), Ingredient('ing12'), Ingredient('ing13')]
+    ingredients_1 = [
+        Ingredient('only in 1'),
+        Ingredient('both without quantity'),
+        Ingredient('both quantity not numeric', Quantity('some')),
+        Ingredient('both quantity numeric no unit', NumericQuantity(1, None)),
+        Ingredient('both quantity numeric unit', NumericQuantity(1, 'g')),
+        Ingredient('both quantity numeric different unit', NumericQuantity(1, 'g'))
+    ]
 
     recipe_1 = Recipe(name_1, description_1, steps_1, ingredients_1)
 
     name_2 = Name('name2')
     description_2 = Description('description2')
     steps_2 = [Step('step21'), Step('step22'), Step('step23')]
-    ingredients_2 = [Ingredient('ing21'), Ingredient('ing22'), Ingredient('ing23')]
+    ingredients_2 = [
+        Ingredient('only in 2'),
+        Ingredient('both without quantity'),
+        Ingredient('both quantity not numeric', Quantity('another')),
+        Ingredient('both quantity numeric no unit', NumericQuantity(2, None)),
+        Ingredient('both quantity numeric unit', NumericQuantity(2, 'g')),
+        Ingredient('both quantity numeric different unit', NumericQuantity(2, 'l'))
+    ]
 
     recipe_2 = Recipe(name_2, description_2, steps_2, ingredients_2)
 
@@ -113,5 +128,14 @@ def test_add_recipes():
     assert recipe.name == recipe_1.name
     assert recipe.description == recipe_1.description
     assert recipe.steps == recipe_1.steps
-    assert recipe.ingredients == recipe_1.ingredients + recipe_2.ingredients
-    
+
+    assert Ingredient('only in 1') in recipe.ingredients
+    assert Ingredient('only in 2') in recipe.ingredients
+    assert Ingredient('both without quantity') in recipe.ingredients
+    assert Ingredient('both quantity not numeric', Quantity('some')) in recipe.ingredients
+    assert Ingredient('both quantity not numeric', Quantity('another')) in recipe.ingredients
+    assert Ingredient('both quantity numeric no unit', NumericQuantity(3, None)) in recipe.ingredients
+    assert Ingredient('both quantity numeric unit', NumericQuantity(3, 'g')) in recipe.ingredients
+    assert Ingredient('both quantity numeric different unit', NumericQuantity(1, 'g')) in recipe.ingredients
+    assert Ingredient('both quantity numeric different unit', NumericQuantity(2, 'l')) in recipe.ingredients
+
