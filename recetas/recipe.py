@@ -58,6 +58,9 @@ class Ingredient(Element):
     def __str__(self):
         return f'{type(self)}({self.text}, {self.quantity})'
 
+    def __hash__(self):
+        return str(self).__hash__()
+
 
 class Recipe:
     def __init__(self, name: Name, description: Description, steps: list[Step], ingredients: list[Ingredient]):
@@ -65,6 +68,9 @@ class Recipe:
         self.description = description
         self.steps = steps
         self.ingredients = ingredients
+
+    def __str__(self):
+        return f'{type(self)}({self.name})'
 
     def __add__(self, recipe_to_add: 'Recipe') -> 'Recipe':
         return Recipe(
@@ -102,8 +108,9 @@ class Recipe:
             if not isinstance(ingredient.quantity, NumericQuantity)
         ]
 
-        return merge_numeric(numeric_ingredients) + other_ingredients
+        return merge_numeric(numeric_ingredients) + self.__remove_duplicates(other_ingredients)
 
-
-
+    @staticmethod
+    def __remove_duplicates(input: list) -> list:
+        return list(set(input))
 

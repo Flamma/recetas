@@ -139,3 +139,26 @@ def test_add_recipes_common_ingredients():
     assert Ingredient('both quantity numeric different unit', NumericQuantity(1, 'g')) in recipe.ingredients
     assert Ingredient('both quantity numeric different unit', NumericQuantity(2, 'l')) in recipe.ingredients
 
+def test_add_recipes_same_ingredients_no_quantity():
+    name_1 = Name('name1')
+    description_1 = Description('description1')
+    steps_1 = [Step('step11'), Step('step12'), Step('step13')]
+    ingredients_1 = [
+        Ingredient('both without quantity')
+    ]
+
+    recipe_1 = Recipe(name_1, description_1, steps_1, ingredients_1)
+
+    name_2 = Name('name2')
+    description_2 = Description('description2')
+    steps_2 = [Step('step21'), Step('step22'), Step('step23')]
+    ingredients_2 = [
+        Ingredient('both without quantity')
+    ]
+
+    recipe_2 = Recipe(name_2, description_2, steps_2, ingredients_2)
+
+    recipe = recipe_1 + recipe_2
+
+    assert recipe.ingredients == [Ingredient('both without quantity')]
+
